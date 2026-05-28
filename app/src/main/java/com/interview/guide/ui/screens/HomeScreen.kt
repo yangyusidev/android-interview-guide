@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +40,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.interview.guide.data.SampleData
 import com.interview.guide.data.model.Category
@@ -48,12 +51,14 @@ import com.interview.guide.data.model.UserStats
 import com.interview.guide.ui.components.CategoryCard
 import com.interview.guide.ui.components.QuestionCard
 import com.interview.guide.ui.components.SearchBar
+import com.interview.guide.ui.theme.AndroidInterviewGuideTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onCategoryClick: (Category) -> Unit,
     onQuestionClick: (Question) -> Unit,
+    bottomInset: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val stats = SampleData.getUserStats()
@@ -63,6 +68,8 @@ fun HomeScreen(
     var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
+        // 关闭默认 systemBars 处理，外层 Scaffold 已经处理过了，避免重复 padding
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
                 title = {
@@ -101,10 +108,13 @@ fun HomeScreen(
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = paddingValues.calculateTopPadding() + 16.dp,
+                bottom = bottomInset + 16.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // 搜索栏
@@ -184,11 +194,6 @@ fun HomeScreen(
                     onClick = { onQuestionClick(question) },
                     onFavoriteClick = { /* 收藏 */ }
                 )
-            }
-
-            // 底部间距
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
             }
         }
     }
@@ -298,5 +303,29 @@ private fun CategoriesGrid(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Home - Light")
+@Composable
+private fun HomeScreenPreview() {
+    AndroidInterviewGuideTheme {
+        HomeScreen(
+            onCategoryClick = {},
+            onQuestionClick = {},
+            bottomInset = 80.dp
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Home - Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun HomeScreenDarkPreview() {
+    AndroidInterviewGuideTheme {
+        HomeScreen(
+            onCategoryClick = {},
+            onQuestionClick = {},
+            bottomInset = 80.dp
+        )
     }
 }

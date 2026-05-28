@@ -3,9 +3,9 @@ package com.interview.guide.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -23,17 +23,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.interview.guide.data.SampleData
 import com.interview.guide.data.model.Question
 import com.interview.guide.ui.components.EmptyState
 import com.interview.guide.ui.components.QuestionCard
 import com.interview.guide.ui.components.SearchBar
+import com.interview.guide.ui.theme.AndroidInterviewGuideTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteScreen(
     onQuestionClick: (Question) -> Unit,
+    bottomInset: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val favoriteQuestions = SampleData.questions.filter { it.isFavorite }
@@ -44,6 +48,7 @@ fun FavoriteScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
                 title = {
@@ -61,10 +66,13 @@ fun FavoriteScreen(
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = paddingValues.calculateTopPadding() + 16.dp,
+                bottom = bottomInset + 16.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // 搜索栏
@@ -103,11 +111,28 @@ fun FavoriteScreen(
                     )
                 }
             }
-
-            // 底部间距
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
-            }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Favorite - Light")
+@Composable
+private fun FavoriteScreenPreview() {
+    AndroidInterviewGuideTheme {
+        FavoriteScreen(
+            onQuestionClick = {},
+            bottomInset = 80.dp
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Favorite - Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun FavoriteScreenDarkPreview() {
+    AndroidInterviewGuideTheme {
+        FavoriteScreen(
+            onQuestionClick = {},
+            bottomInset = 80.dp
+        )
     }
 }

@@ -17,19 +17,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.interview.guide.data.SampleData
 import com.interview.guide.ui.components.StatCard
+import com.interview.guide.ui.theme.AndroidInterviewGuideTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
+    bottomInset: Dp = 0.dp,
     modifier: Modifier = Modifier
 ) {
     val stats = SampleData.getUserStats()
     var isDarkMode by remember { mutableStateOf(false) }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             TopAppBar(
                 title = {
@@ -55,10 +60,13 @@ fun ProfileScreen(
         modifier = modifier
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(16.dp),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                top = paddingValues.calculateTopPadding() + 16.dp,
+                bottom = bottomInset + 16.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // 用户信息卡片
@@ -145,11 +153,6 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
-            }
-
-            // 底部间距
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
             }
         }
     }
@@ -374,5 +377,21 @@ private fun SettingsItem(
                 modifier = Modifier.size(20.dp)
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Profile - Light")
+@Composable
+private fun ProfileScreenPreview() {
+    AndroidInterviewGuideTheme {
+        ProfileScreen(bottomInset = 80.dp)
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Profile - Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ProfileScreenDarkPreview() {
+    AndroidInterviewGuideTheme {
+        ProfileScreen(bottomInset = 80.dp)
     }
 }

@@ -11,10 +11,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.interview.guide.data.SampleData
 import com.interview.guide.data.model.*
 import com.interview.guide.ui.components.*
+import com.interview.guide.ui.theme.AndroidInterviewGuideTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -180,5 +182,29 @@ private fun DifficultyFilter(
                 } else null
             )
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Category - Light")
+@Composable
+private fun CategoryScreenPreview() {
+    AndroidInterviewGuideTheme {
+        CategoryScreen(
+            category = Category.JAVA,
+            onBackClick = {},
+            onQuestionClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "Category - Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CategoryScreenDarkPreview() {
+    AndroidInterviewGuideTheme {
+        CategoryScreen(
+            category = Category.JAVA,
+            onBackClick = {},
+            onQuestionClick = {}
+        )
     }
 }

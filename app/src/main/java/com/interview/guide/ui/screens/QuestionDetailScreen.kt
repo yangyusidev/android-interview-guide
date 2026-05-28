@@ -15,9 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.interview.guide.data.SampleData
 import com.interview.guide.data.model.*
 import com.interview.guide.ui.components.DifficultyBadge
+import com.interview.guide.ui.theme.AndroidInterviewGuideTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -452,5 +455,31 @@ private fun BottomActionBar(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "QuestionDetail - Light")
+@Composable
+private fun QuestionDetailScreenPreview() {
+    AndroidInterviewGuideTheme {
+        QuestionDetailScreen(
+            question = SampleData.questions.first(),
+            onBackClick = {},
+            onMarkAsLearned = {},
+            onToggleFavorite = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true, name = "QuestionDetail - Dark", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun QuestionDetailScreenDarkPreview() {
+    AndroidInterviewGuideTheme {
+        QuestionDetailScreen(
+            question = SampleData.questions.first(),
+            onBackClick = {},
+            onMarkAsLearned = {},
+            onToggleFavorite = {}
+        )
     }
 }

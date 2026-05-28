@@ -86,14 +86,18 @@ fun MainNavigation() {
             BottomNavBar(navController = navController)
         }
     ) { paddingValues ->
+        // 把底部导航栏高度单独取出来，传给主页面，让它们的 LazyColumn 自己处理底部沉浸
+        val bottomBarHeight = paddingValues.calculateBottomPadding()
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
-            modifier = Modifier.padding(paddingValues)
+            // 只 padding 顶部状态栏，底部不 padding，让内容可以延伸到 NavigationBar 下方
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding())
         ) {
             // 首页
             composable(Screen.Home.route) {
                 HomeScreen(
+                    bottomInset = bottomBarHeight,
                     onCategoryClick = { category ->
                         navController.navigate(Screen.Category.createRoute(category.name))
                     },
@@ -106,6 +110,7 @@ fun MainNavigation() {
             // 收藏页
             composable(Screen.Favorite.route) {
                 FavoriteScreen(
+                    bottomInset = bottomBarHeight,
                     onQuestionClick = { question ->
                         navController.navigate(Screen.QuestionDetail.createRoute(question.id))
                     }
@@ -114,7 +119,9 @@ fun MainNavigation() {
 
             // 个人中心
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(
+                    bottomInset = bottomBarHeight
+                )
             }
 
             // 分类详情
